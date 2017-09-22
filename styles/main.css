@@ -40,6 +40,9 @@ html {
      color: white;
  }
 
+
+
+
  .links-container .navbar-link {
     display: table-cell;
     position: relative;
@@ -58,9 +61,14 @@ html {
     cursor: pointer;
 }
 
-.links-container .navbar-link:hover {
+.links-container .navbar-link:hover  {
     color: rgb(233,50,117);
 }
+
+.links-container .navbar-link:active {
+    background-color: white;
+}
+
 
  .container {
       margin: 0 auto;
