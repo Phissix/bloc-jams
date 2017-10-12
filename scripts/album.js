@@ -29,6 +29,21 @@ var albumMarconi = {
          { title: 'Wrong phone number', duration: '2:15'}
      ]
  };
+//Assignment album
+var  albumHeartbreak = {
+      title: '808s & Heartbreak',
+      artist: 'Kanye West',
+      label: 'Roc-A-Fella Records',
+      year: '2008',
+      albumArtUrl: 'assets/images/album_covers/18.png',
+      songs: [
+          { title: 'Say You Will', duration: '6:18' },
+          { title: 'Welcome to Heartbreak', duration: '4:23' },
+          { title: 'Heartless', duration: '3:31'},
+          { title: 'Amazing', duration: '3:58' },
+          { title: 'Love Lockdown', duration: '4:31'}
+     ]
+};
 
 var createSongRow = function(songNumber, songName, songLength) {
      var template =
@@ -41,15 +56,14 @@ var createSongRow = function(songNumber, songName, songLength) {
 
      return template;
 };
+// #1 make contents global so we can access from window.onload
+var albumTitle = document.getElementsByClassName('album-view-title')[0];
+var albumArtist = document.getElementsByClassName('album-view-artist')[0];
+var albumReleaseInfo = document.getElementsByClassName('album-view-release-info')[0];
+var albumImage = document.getElementsByClassName('album-cover-art')[0];
+var albumSongList = document.getElementsByClassName('album-view-song-list')[0];
 
 var setCurrentAlbum = function(album) {
-    // #1
-    var albumTitle = document.getElementsByClassName('album-view-title')[0];
-    var albumArtist = document.getElementsByClassName('album-view-artist')[0];
-    var albumReleaseInfo = document.getElementsByClassName('album-view-release-info')[0];
-    var albumImage = document.getElementsByClassName('album-cover-art')[0];
-    var albumSongList = document.getElementsByClassName('album-view-song-list')[0];
-
     // #2
     albumTitle.firstChild.nodeValue = album.title;
     albumArtist.firstChild.nodeValue = album.artist;
@@ -65,6 +79,24 @@ var setCurrentAlbum = function(album) {
     }
 };
 
+//we want to add an event listener when user clicks album cover (albumImage)
 window.onload = function() {
+    //default current album when page loads
     setCurrentAlbum(albumPicasso);
+    //create an array for the possible album objects
+    var currentAlbum = [albumMarconi, albumHeartbreak, albumPicasso];
+    //default index starts at albumMarconi when clicked
+    var i = 0;
+    //add the event listener
+    albumImage.addEventListener("click", function(foo) {
+        //toggle b/w objects
+        setCurrentAlbum(currentAlbum[i]);
+        i += 1;
+        //if user keeps infinetly clicking
+        if (i == currentAlbum.length) {
+          //reset the index
+          i = 0;
+        }
+    });
+
 };
