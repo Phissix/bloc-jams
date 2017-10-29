@@ -54,7 +54,57 @@ var createSongRow = function(songNumber, songName, songLength) {
       + '</tr>'
       ;
 
-     return $(template);
+     var $row = $(template);
+
+     var clickHandler = function() {
+        // get the song data
+        var songNum = $(this).attr('data-song-number');
+        //check if objects points to anything
+        if (currentlyPlayingSong !== null) {
+          //change data to currentlyPlayingSong when user plays new song
+          var current = $('song-item-number[data-song-number=""' + currentlyPlayingSong + '"]');
+          //change to currentlyPlayingSong
+          current.html(currentlyPlayingSong);
+        }
+        //intiate play to pause
+        if (currentlyPlayingSong !== songNum) {
+          //use pause
+          $(this).html(pauseButtonTemplate);
+          currentlyPlayingSong = songNum;
+
+        } else if (currentlyPlayingSong === songNum) {
+          //from pause to play
+          $(this).html(playButtonTemplate);
+          //set default to null
+          currentlyPlayingSong = null;
+        }
+    };
+
+     var onHover = function(event) {
+         // get row object
+         var row = $(this).find('.song-item-number');
+         //row's attribute
+         var songNum = row.attr('data-song-number');
+         //use play/pause
+         if (songNum !== currentlyPlayingSong) {
+           row.html(playButtonTemplate);
+         }
+     };
+     var offHover = function(event) {
+         var row2 = $(this).find('.song-item-number');
+         var songNum2 = row2.attr('.data-song-number');
+         if (songnum2 !== currentlyPlayingSong) {
+           // return contents
+           row2.html(songNum2);
+         }
+     };
+
+     // #1
+     $row.find('.song-item-number').click(clickHandler);
+     // #2
+     $row.hover(onHover, offHover);
+     // #3
+     return $row;
 };
 // #1 make contents global so we can access from window.onload
 
@@ -81,107 +131,20 @@ var setCurrentAlbum = function(album) {
 };
 /*** write a findParentByClassName function that keeps
 traversing the DOM upward until a parent with a specified class name is found. ***/
-var findParentByClassName = function(x, y) {
-  //use switch and case
-  var target = x.parentElement;
-  switch(target) {
-    case target.className == y:
-      return target;
-    case null:
-      console.log("No parent found");
-      break;
-    case target.className !== y.className && target.className !== null:
-      target = x.parentElement // is this line redundant?
-      return;
-    case target.className !== y.className:
-      console.log("No parent found with that class name")
-      break;
-    default:
-      return;
-  }
-};
-
-var getSongItem = function(element) {
-  //use a switch statement
-  //if element.className ....
-  switch(element.className) {
-    // case similar to "=="
-    case 'album-song-button':
-    case 'ion-play':
-    case 'ion-pause':
-      return findParentByClassName(element, '.song-item-number');
-    case 'album-view-song-item':
-      return element.querySelector('.song-item-number');
-    case 'song-item-number':
-    case 'song-item-title' :
-      return findParentByClassName(element, '.song-item-number');
-    case 'song-item-number':
-      return element;
-    default:
-      return;
-  }
-};
-
-var clickHandler = function(targetElement) {
-  var songItem = getSongItem(targetElement);
-
-  if (currentlyPlayingSong === null) {
-         songItem.innerHTML = pauseButtonTemplate;
-         currentlyPlayingSong = songItem.getAttribute('data-song-number');
-  } else if (currentlyPlayingSong === songItem.getAttribute('data-song-number')) {
-         songItem.innerHTML = playButtonTemplate;
-         currentlyPlayingSong = null;
-  } else if (currentlyPlayingSong !== songItem.getAttribute('data-song-number')) {
-         var currentlyPlayingSongElement = document.querySelector('[data-song-number="' + currentlyPlayingSong + '"]');
-         currentlyPlayingSongElement.innerHTML = currentlyPlayingSongElement.getAttribute('data-song-number');
-         songItem.innerHTML = pauseButtonTemplate;
-         currentlyPlayingSong = songItem.getAttribute('data-song-number');
-  }
-
- };
 
 
-var songListContainer = document.getElementsByClassName('album-view-song-list')[0];
-var songRows = document.getElementsByClassName('album-view-song-item');
+
+
 var playButtonTemplate = '<a class="album-song-button"><span class="ion-play"></span></a>';
 var pauseButtonTemplate = '<a class="album-song-button"><span class="ion-pause"></span></a>';
 
 // Store state of playing songs
 var currentlyPlayingSong = null;
 //we want to add an event listener when user clicks album cover (albumImage)
-window.onload = function() {
+$(document).ready(function() {
     //default current album when page loads
     setCurrentAlbum(albumPicasso);
-    songListContainer.addEventListener('mouseover', function(event) {
-         // #1
-         if (event.target.parentElement.className === 'album-view-song-item') {
-             // Change the content from the number to the play button's HTML
-             event.target.parentElement.querySelector('.song-item-number').innerHTML = playButtonTemplate;
-             //get the song's item
-             var item = getSongItem(event.target);
-             //check if item is not the current song
-             if (item.getAttribute('song-item-number') !== currentlyPlayingSong) {
-               item.innerHTML = currentlyPlayingSong;
-             }
-         }
-     });
-
-     for (var i = 0; i < songRows.length; i++) {
-         songRows[i].addEventListener('mouseleave', function(event) {
-           // #1
-           var songItem = getSongItem(event.target);
-           var songItemNumber = songItem.getAttribute('data-song-number');
-           // #2
-           if (songItemNumber !== currentlyPlayingSong) {
-                 songItem.innerHTML = songItemNumber;
-             }
-         });
-
-         songRows[i].addEventListener('click', function(event) {
-             // Event handler call
-              clickHandler(event.target);
-         });
-     }
+});
     //create an array for the possible album objects
     var currentAlbum = [albumMarconi, albumHeartbreak, albumPicasso];
     //default index starts at albumMarconi when clicked
