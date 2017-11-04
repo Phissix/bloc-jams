@@ -142,6 +142,7 @@ var updatePlayerBarSong = function() {
     $('.main-controls .play-pause').html(playerBarPauseButton);
 };
 
+
 var nextSong = function () {
 
     // Question: is index a built into Javascript? Does it automatically return the index?
@@ -221,12 +222,39 @@ var currentSoundFile = null;
 var currentVolume = 80;
 var $previousButton = $('.main-controls .previous');
 var $nextButton = $('.main-controls .next');
-//we want to add an event listener when user clicks album cover (albumImage)
+//create player bar object
+var $playFromPlayerBar = $('.main-controls .play-pause');
+
+var togglePlayFromPlayerBar = function(){
+    //if player bar is clicked
+    if ($playFromPlayerBar.click){
+        //get cell position
+        var $songNumberCell = getSongNumberCell(currentlyPlayingSongNumber);
+        //play/pause condition of player bar
+        if (currentSoundFile.isPaused()) {
+            $songNumberCell.html(pauseButtonTemplate);
+            $playFromPlayerBar.html(playerBarPauseButton);
+        } else {
+            $songNumberCell.html(playButtonTemplate);
+            $playFromPlayerBar.html(playerBarPlayButton);
+        }
+        //toggle play
+        currentSoundFile.togglePlay();
+    }
+};
+
+
+
+
+
 $(document).ready(function() {
+    //follow call stack order...
     //default current album when page loads
     setCurrentAlbum(albumPicasso);
     $previousButton.click(previousSong);
     $nextButton.click(nextSong);
+    //add click event for player bar
+    $playFromPlayerBar.click(togglePlayFromPlayerBar);
 });
     //create an array for the possible album objects
 /**
