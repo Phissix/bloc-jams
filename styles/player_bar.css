@@ -109,6 +109,10 @@
  }
 
  .seek-bar .thumb {
+     transition: width 100ms ease-in-out,
+                 height 100ms ease-in-out,
+                 margin-top 100ms ease-in-out,
+                 margin-left 100ms ease-in-out;
      position: absolute;
      height: 0.5rem;
      width: 0.5rem;
