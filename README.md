@@ -1,2 +1,3 @@
 # bloc-jams
-Mod 2 Work
+
+Project for Front-End Web Development
